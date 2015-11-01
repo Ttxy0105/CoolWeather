@@ -4,6 +4,7 @@ import android.text.TextUtils;
 
 import com.bloch1790.coolweather.db.CoolWeatherDB;
 import com.bloch1790.coolweather.model.City;
+import com.bloch1790.coolweather.model.County;
 import com.bloch1790.coolweather.model.Province;
 
 /**
@@ -42,6 +43,25 @@ public class Utility {
                     city.setProvinceId(provinceId);
                     //将解析出来的数据存储到City表
                     coolWeatherDB.saveCity(city);
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean handleCountiesResponse(CoolWeatherDB coolWeatherDB, String response, int cityId) {
+        if (!TextUtils.isEmpty(response)) {
+            String[] allCounties = response.split(",");
+            if (allCounties != null && allCounties.length > 0) {
+                for (String c : allCounties) {
+                    String[] array = c.split("\\|");
+                    County county = new County();
+                    county.setCountyCode(array[0]);
+                    county.setCountyName(array[1]);
+                    county.setCityId(cityId);
+                    //将解析出来的数据存储到County表
+                    coolWeatherDB.saveCounty(county);
                 }
                 return true;
             }
